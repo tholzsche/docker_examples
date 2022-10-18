@@ -24,12 +24,10 @@ RUN export UNAME=$UNAME UID=1000 GID=1000 && \
 
 COPY pulse-client.conf /etc/pulse/client.conf
 
-USER $UNAME
-ENV HOME /home/noob
+USER ${UNAME}
+ENV HOME /home/${UNAME}
 
 # Set so that when xterm launches on login, it will launch Firefox
-RUN bash -c 'echo "wget https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-1.44.4.xpi -P /home/noob/Downloads/" >> /home/noob/.bashrc' && \
-    bash -c 'echo "firefox /home/noob/Downloads/*.xpi && rm *.xpi" >> /home/noob/.bashrc'
-
-# run
-#CMD ["pacat", "-vvvv", "/dev/urandom"]
+RUN bash -c 'echo "wget https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-1.44.4.xpi -P /home/'${UNAME}'/Downloads/" >> /home/'${UNAME}'/.bashrc' && \
+    bash -c 'echo "firefox /home/'${UNAME}'/Downloads/*.xpi && rm *.xpi" >> /home/'${UNAME}'/.bashrc'
+    
