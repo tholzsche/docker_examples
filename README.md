@@ -1,5 +1,5 @@
-# docker_x11_pulseaudio
-simple sandbox for streaming services
+# docker_x11_vnc
+simple sandbox for browsing/streaming ...
 
 ## usage
 1. build the image.
