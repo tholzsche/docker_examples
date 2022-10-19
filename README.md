@@ -10,4 +10,5 @@ build.sh
 ```
 run.sh
 ```
-3. enjoy!
+3. connect to the docker image via vnc
+4. enjoy!

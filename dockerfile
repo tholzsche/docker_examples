@@ -1,19 +1,16 @@
-FROM ubuntu:18.04
+FROM ubuntu:bionic
 
 ENV UNAME noob
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
- pulseaudio-utils \
- firefox \
- wget \
- ubuntu-restricted-extras ffmpeg \
- libdvdnav4 libdvd-pkg gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly 
+ x11vnc xvfb firefox
 
 
 # Set up the user
 RUN export UNAME=$UNAME UID=1000 GID=1000 && \
     mkdir -p "/home/${UNAME}" && \
+    mkdir -p "/home/${UNAME}/.vnc" && \
     echo "${UNAME}:x:${UID}:${GID}:${UNAME} User,,,:/home/${UNAME}:/bin/bash" >> /etc/passwd && \
     echo "${UNAME}:x:${UID}:" >> /etc/group && \
     mkdir -p /etc/sudoers.d && \
@@ -22,12 +19,16 @@ RUN export UNAME=$UNAME UID=1000 GID=1000 && \
     chown ${UID}:${GID} -R /home/${UNAME} && \
     gpasswd -a ${UNAME} audio
 
-COPY pulse-client.conf /etc/pulse/client.conf
-
 USER ${UNAME}
 ENV HOME /home/${UNAME}
 
+
+# We generate the password for VNC during image build time, which would 
+# normally be poor practice, however this makes it easier to keep
+# If the container will be used locally and there are no other users or
+# services that could access it, this line can be omitted
+RUN bash -c 'PASSWD=$(head -c 20 /dev/urandom | base64); echo "VNC Password: $PASSWD"; x11vnc -storepasswd $PASSWD /home/'${UNAME}'/.vnc/passwd'
+
+
 # Set so that when xterm launches on login, it will launch Firefox
-RUN bash -c 'echo "wget https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-1.44.4.xpi -P /home/'${UNAME}'/Downloads/" >> /home/'${UNAME}'/.bashrc' && \
-    bash -c 'echo "firefox /home/'${UNAME}'/Downloads/*.xpi && rm *.xpi" >> /home/'${UNAME}'/.bashrc'
-    
+RUN bash -c 'echo "firefox" >> /home/'${UNAME}'/.bashrc'
