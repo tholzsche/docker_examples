@@ -1,13 +1,5 @@
-# docker_x11_pulseaudio
-simple sandbox for streaming services
+# docker_examples
+collection of some hopefully useful examples
 
-## usage
-1. build the image.
-```
-build.sh
-```
-2. run the image. on startup, firefox opens and the ublock addon gets installed.
-```
-run.sh
-```
-3. enjoy!
+1. https://github.com/tholzsche/docker_examples/tree/x11+pulseaudio
+2. https://github.com/tholzsche/docker_examples/tree/x11+vnc
