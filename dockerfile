@@ -1,15 +1,23 @@
-FROM ubuntu:18.04
+FROM ubuntu:16.04
 
 ENV UNAME noob
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
- pulseaudio-utils \
- firefox \
- wget \
- ubuntu-restricted-extras ffmpeg \
- libdvdnav4 libdvd-pkg gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly 
-
+ libncurses5-dev libncursesw5-dev libncurses5 libtinfo5 libtinfo-dev \
+ libstdc++6 \
+ libgtk2.0-0 \
+ dpkg-dev \
+ lib32stdc++6 \
+ libgtk2.0-0 \
+ libfontconfig1 \
+ libx11-6 \
+ libxext6 \
+ libxrender1 \
+ libsm6 \
+ libqtgui4 \
+ libxi6 \
+ openjdk-8-jdk
 
 # Set up the user
 RUN export UNAME=$UNAME UID=1000 GID=1000 && \
@@ -22,12 +30,8 @@ RUN export UNAME=$UNAME UID=1000 GID=1000 && \
     chown ${UID}:${GID} -R /home/${UNAME} && \
     gpasswd -a ${UNAME} audio
 
-COPY pulse-client.conf /etc/pulse/client.conf
+#COPY Xilinx_Vivado_SDK_Lin_2014.1_0405_1 /home/${UNAME}
+
 
 USER ${UNAME}
 ENV HOME /home/${UNAME}
-
-# Set so that when xterm launches on login, it will launch Firefox
-RUN bash -c 'echo "wget https://addons.mozilla.org/firefox/downloads/file/4003969/ublock_origin-1.44.4.xpi -P /home/'${UNAME}'/Downloads/" >> /home/'${UNAME}'/.bashrc' && \
-    bash -c 'echo "firefox /home/'${UNAME}'/Downloads/*.xpi && rm *.xpi" >> /home/'${UNAME}'/.bashrc'
-    
